@@ -51,32 +51,32 @@ export class UserController {
         }
     }
 
-    public userLogin = async (req: Request, res: Response) =>{
-        try {
+    // public userLogin = async (req: Request, res: Response) =>{
+    //     try {
 
-            //modelar entrada
-            const input = {
-                email: req.body.email,
-                password: req.body.password
-            }
+    //         //modelar entrada
+    //         const input = {
+    //             email: req.body.email,
+    //             password: req.body.password
+    //         }
 
-            const output = await this.userBusiness.userLogin(input)
+    //         const output = await this.userBusiness.userLogin(input)
 
-            res.status(200).send(output)
+    //         res.status(200).send(output)
             
-        } catch (error) {
-            console.log(error)
+    //     } catch (error) {
+    //         console.log(error)
 
-            if (req.statusCode === 200){
-                res.status(500)
-            }
+    //         if (req.statusCode === 200){
+    //             res.status(500)
+    //         }
 
-            if (error instanceof Error) {
-                res.send(error.message)
-            } else {
-                res.send("Erro inesperado")
-            }
+    //         if (error instanceof Error) {
+    //             res.send(error.message)
+    //         } else {
+    //             res.send("Erro inesperado")
+    //         }
             
-        }
-    }
+    //     }
+    // }
 }

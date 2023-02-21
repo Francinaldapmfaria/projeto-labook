@@ -19,8 +19,8 @@ export class Post {
             content :this.content,
             likes: this.likes,
             dislikes:this.dislikes,
-            createdAt:this.id,
-            updatedAt:this.id
+            created_at:this.id,
+            updated_at:this.id
         } 
     }
 

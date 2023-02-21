@@ -1,6 +1,7 @@
 import { UserDatabase } from "../database/UserDatabase"
-import { SignupInputDTO, SignupOutputDTO } from "../dtos/userDTO"
+import { LoginInputDTO, LoginOutputDtO, SignupInputDTO, SignupOutputDTO } from "../dtos/userDTO"
 import { BadRequestError } from "../error/BadRequestError"
+import { NotFoundError } from "../error/NotFoundError"
 import { User } from "../models/User"
 import { HashManager } from "../services/HashManager"
 import { IdGenerator } from "../services/IdGenerator"
@@ -49,10 +50,19 @@ export class UserBusiness {
         // const userDatabase = new UserDatabase()
 
         const userDBExists = await this.userDatabase.findUserEmail(email)
+
         if (userDBExists) {
             
             throw new Error("'email' ja existe");
         }
+
+        // if (email !== undefined){
+        //     if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) {
+        //         throw new Error("Parâmetro 'email' inválido")
+        //     }
+        // }
+
+       
 
         
         const id = this.idGenerator.generate()
@@ -104,26 +114,50 @@ export class UserBusiness {
         const {email, password} = input
 
         if (typeof email !== "string"){
-            throw new Error("'email'deve ser uma string")
+            throw new BadRequestError("'email'deve ser uma string")
         }
 
         if(typeof password !== "string"){
-            throw new Error("'password' deve ser string")
+            throw new BadRequestError("'password' deve ser string")
         }
 
-        const searchUserDB = await this.userDatabase.findUserEmail(email)
+        const searchUserDB:UserDB | undefined = await this.userDatabase.findUserEmail(email)
 
         if(!searchUserDB) {
-            throw new Error("'email' não encontrado")
-        }
-        if(password !== searchUserDB.password){
-            throw new Error("'email' ou 'password' incorretos")
+            throw new NotFoundError("'email' não encontrado")
         }
 
-        const output = {
-            message: "Login realizado com sucesso"
+        const user = new User  (
+            searchUserDB.id,
+            searchUserDB.name,
+            searchUserDB.email,
+            searchUserDB.password,
+            searchUserDB.role,
+            searchUserDB.created_at,
+        )
+
+        const hashePassword = user.getPassword()
+        const correctPassword = await this.hashManager.compare(password, hashePassword)
+
+        if(!correctPassword){
+            throw new NotFoundError("'email' ou 'password' incorretos")
+        }
+
+        const payload: TokenPayload = {
+            id: user.getId(),
+            name: user.getName(),
+            role: user.getRole()
+        }
+
+        const token = this.tokenManager.createToken(payload)
+
+        const output: LoginOutputDtO = {
+            token
         }
 
         return output
     }
 }
+
+
+

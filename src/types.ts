@@ -3,7 +3,7 @@ export interface UserDB {
     name: string,
     email: string,
     password: string,
-    role: string,
+    role: USER_ROLES,
     created_at: string
 }
 
@@ -12,7 +12,7 @@ export interface UserModel {
     name: string,
     email: string,
     password: string,
-    role: string,
+    role: USER_ROLES,
     createdAt: string
 }
 
@@ -22,8 +22,13 @@ export interface PostsDB {
     content :string,
     likes:number,
     dislikes:number,
-    createdAt:string,
-    updatedAt:string
+    created_at:string,
+    updated_at:string
+}
+
+export interface PostsAndItCreatorDB extends PostsDB {
+   
+    creator_name: string
 }
 
 export interface PostsModel{

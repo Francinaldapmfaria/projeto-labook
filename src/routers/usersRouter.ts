@@ -27,5 +27,5 @@ const userController =  new UserController(
 ) //instanciado eu chamo em baixo a variavel que guarda a class, mas não funciona sozinha 
 //tem que chamar o método createUsers
 usersRouter.post("/signup", userController.userSignup )
-// usersRouter.post("/login", userController.userLogin )
+usersRouter.post("/login", userController.userLogin )
 

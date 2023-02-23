@@ -1,4 +1,4 @@
-import { PostsAndItCreatorDB } from "../types"
+import { PostsAndItCreatorDB, PostsDB } from "../types"
 import { BaseDatabase } from "./BaseDatabase"
 
 
@@ -23,6 +23,30 @@ export class PostDatabase extends BaseDatabase {
         return result
     }
 
+    public insert = async (postDB: PostsDB): Promise<void> => {
+        await BaseDatabase.connection(PostDatabase.TABLE_POSTS)
+        .insert(postDB)
+    }
+
+    public findId = async (id: string): Promise<PostsDB |undefined> => {
+        const result: PostsDB[]= await BaseDatabase
+        .connection(PostDatabase.TABLE_POSTS)
+        .select()
+        .where({id})
+
+        return result[0]
+    }
+
+    public update =  async (idToEdit: string, postDB: PostsDB): Promise<void> => {
+        await BaseDatabase.connection(PostDatabase.TABLE_POSTS)
+        .update(postDB)
+        .where({id: idToEdit})
+    }
+
+    public delete = async (id:string): Promise<void> => {
+        await BaseDatabase.connection(PostDatabase.TABLE_POSTS)
+        .delete().where({id})
+    }
 }
 
 

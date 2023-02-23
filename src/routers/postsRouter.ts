@@ -15,4 +15,7 @@ const postController =  new PostController(
     )
 ) 
 
-postsRouter.get("/", postController.PostsGet )
+postsRouter.get("/", postController.postsGet )
+postsRouter.post("/", postController.postsCreate )
+postsRouter.put("/:id", postController.postsEdit )
+postsRouter.delete("/:id", postController.postsDelete)

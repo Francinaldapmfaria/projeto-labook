@@ -39,6 +39,8 @@ VALUES
 ("p001", "a001","Meu primeiro dia de trabalho"),
 ("p002", "a002", "Viagem para Maldivas");
 
+SELECT*FROM posts;
+
 SELECT  
     posts.id ,
     posts.creator_id ,

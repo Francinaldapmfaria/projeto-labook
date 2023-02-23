@@ -3,22 +3,22 @@
 Lista de requisitos
 Endpoints
 
- signup
- login
- get posts
- create post
- edit post
- delete post
- like / dislike post
+ [x]signup
+ [x]login
+ [x]get posts
+ []create post
+ []edit post
+ []delete post
+ []like / dislike post
 
 Autenticação e autorização
 
- identificação UUID
- senhas hasheadas com Bcrypt
- tokens JWT
+ [x]identificação UUID
+ [x]senhas hasheadas com Bcrypt
+ [x]tokens JWT
  
 Código
 
- POO
- Arquitetura em camadas
- Roteadores no Express
+ [x]POO
+ [x]Arquitetura em camadas
+ [x]Roteadores no Express

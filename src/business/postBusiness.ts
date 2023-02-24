@@ -1,12 +1,12 @@
 import { create } from "domain";
 import { PostDatabase } from "../database/PostDatabase";
-import { CreatePostsInputDTO, DeletePostInputDTO, EditPostInputDTO, GetPostInputDTO, GetPostOutputDTO } from "../dtos/userDTO";
+import { CreatePostsInputDTO, DeletePostInputDTO, EditPostInputDTO, GetPostInputDTO, GetPostOutputDTO, LikedislikeInputDTO } from "../dtos/userDTO";
 import { BadRequestError } from "../error/BadRequestError";
 import { NotFoundError } from "../error/NotFoundError";
 import { Post } from "../models/Post";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
-import { PostsAndItCreatorDB, PostsDB, USER_ROLES } from "../types";
+import { LikeDislikeDB, PostsAndItCreatorDB, PostsDB, POST_LIKE, USER_ROLES } from "../types";
 
 export class postBusiness {
     constructor(
@@ -198,7 +198,7 @@ export class postBusiness {
         postDB.creator_id !== creatorId
 
         ){
-        throw new BadRequestError("Edição realizada somente pelo criador")
+        throw new BadRequestError("Só pode ser deletado pelo criador ")
        }
 
        //até aqui quem ta deletando seu próprio post
@@ -206,11 +206,132 @@ export class postBusiness {
 
 
 
-        const postToDelete = payload.name
+        // const postToDelete = payload.name
 
 
         
 
-        await this.postDatabase.delete(postToDelete)
+        await this.postDatabase.delete(idToDelete)
     }
+
+    public postsLikeOrDislike = async (input: LikedislikeInputDTO ): Promise<void> => {
+        const {idLikeDislike, token, like} = input
+
+
+        //validação do token
+        if(token === undefined) {
+            throw new BadRequestError("token não existe")
+        }
+
+            //pegar o payload do token é valida-lo
+        const payload = this.tokenManager.getPayload(token)
+
+            
+        if(payload === null) {
+            throw new BadRequestError("token inválido")
+
+        }
+
+        if(typeof like !== "boolean"){
+            throw new BadRequestError("'like' deve ser boolean")
+        }
+
+
+       
+
+        const postWithCreatorDB = await this.postDatabase.findPostIfCreatorById(idLikeDislike)
+
+        if(!postWithCreatorDB) {
+            throw new NotFoundError("'id' não encontrado")
+        }
+
+        //gerando id da playlist
+
+        const creatorId = payload.id
+        const likeSQlite = like?1: 0
+
+    //    if(
+    //     payload.role !== USER_ROLES.ADMIN && 
+    //     postDB.creator_id !== creatorId
+
+    //     ){
+    //     throw new BadRequestError("Edição realizada somente pelo criador")
+    //    }
+
+       //até aqui quem ta deletando seu próprio post
+       //quando for adm não terá acesso ao nome da pessoa que criou
+
+        const likeDislikeDB: LikeDislikeDB = {
+            user_id: creatorId,
+            post_id:postWithCreatorDB.id,
+            like: likeSQlite
+        }
+
+        const post= new Post(
+                
+            postWithCreatorDB.id,
+            postWithCreatorDB.content,
+            postWithCreatorDB.likes,
+            postWithCreatorDB.dislikes,
+            postWithCreatorDB.created_at,
+            postWithCreatorDB.updated_at,
+            postWithCreatorDB.creator_id,
+            postWithCreatorDB.creator_name,
+    )
+
+        const likedislikeExists = await this.postDatabase
+        .findLikeDislike(likeDislikeDB)
+
+         //deu like cai nesse e ta querendo dar outro like
+        if(likedislikeExists === POST_LIKE.ALREADY_LIKED){
+            //like pode ser true
+            //like pode ser false
+
+            if(like){
+                await this.postDatabase.removeLikeDislike(likeDislikeDB)
+                post.removeLike()
+            }else {
+                await this.postDatabase.updateLikeDislike(likeDislikeDB)
+                post.removeLike()
+                post.addDislike()
+
+
+            }
+
+               
+        }else if (likedislikeExists === POST_LIKE.ALREADY_DISLIKED) {
+            if(like){
+                await this.postDatabase.updateLikeDislike(likeDislikeDB)
+                post.removeDislike()
+                post.addLike()
+            }else {
+                await this.postDatabase.removeLikeDislike(likeDislikeDB)
+                post.removeDislike()
+              
+
+
+            }
+
+            //inserção, senuna deu like ou dislike cai neste else
+        } else {
+            await this.postDatabase.postsLikeOrDislike(likeDislikeDB)
+
+          
+    
+                //com ternário
+                //like?post.addLike() : post.addDislike()
+    
+            if(like){
+                post.addLike()
+            }else{
+                post.addDislike()
+            }
+    
+           
+
+        }
+        const updatePostDB =post.toDBModel()
+        await this.postDatabase.update(idLikeDislike,updatePostDB)
+       
+    } 
 }

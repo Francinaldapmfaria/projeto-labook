@@ -15,8 +15,6 @@ export class LikeDislike {
         } 
     }
 
-
-
     public getUserId(): string {
         return this.userId
     }

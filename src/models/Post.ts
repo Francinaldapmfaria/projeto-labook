@@ -12,8 +12,6 @@ export class Post {
         private creatorName: string
         ) {}
 
-   
-
     public getId(): string {
         return this.id
     }
@@ -21,8 +19,6 @@ export class Post {
     public setId(value: string): void {
         this.id = value
     }
-
-    
 
     public getContent(): string {
         return this.content

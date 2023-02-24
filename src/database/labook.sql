@@ -29,8 +29,8 @@ CREATE TABLE posts(
     created_at TEXT DEFAULT (DATETIME()) NOT NULL,
     updated_at TEXT DEFAULT (DATETIME()) NOT NULL,
     FOREIGN KEY (creator_id) REFERENCES users(id)
-        ON DELETE CASCADE --PARA QDO USUARIO DELETADO, TODOS AS PLAYLISTS DO USUARIO SERÁ DELETADO
-        ON UPDATE CASCADE --PARA QDO USUARIO EDITADO, TODOS AS PLAYLISTS DO USUARIO SERÁ EDITADO
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE 
 );
 DROP TABLE posts;
 
@@ -73,8 +73,8 @@ CREATE TABLE likes_dislikes(
 );
 
 INSERT INTO likes_dislikes(user_id, post_id, like )
-VALUES --like 1 e dislike 0
-("a002", "p001",0), --a002 deu dislike no post p001
-("a001", "p002", 1); --a001 deu like no post p002
+VALUES 
+("a002", "p001",0), 
+("a001", "p002", 1); 
 
 SELECT * FROM likes_dislikes;

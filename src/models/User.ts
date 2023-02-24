@@ -10,7 +10,6 @@ export class User {
         private createdAt: string
     ) {}
 
-    //metodo que converte valores para tipagens-retorna um userDB
     public toDBModel():UserDB {
         return {
             id: this.id,
@@ -32,7 +31,6 @@ export class User {
             createdAt: this.createdAt
         }
     }
-
 
     public getId(): string {
         return this.id

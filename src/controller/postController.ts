@@ -10,15 +10,11 @@ export class PostController {
 
     public postsGet = async (req: Request, res: Response) => {
         try {
-
            const input: GetPostInputDTO = {
             token: req.headers.authorization
            }
-
            const output = await this.postBusiness.postsGet(input)
-
            res.status(200).send(output)
-            
         } catch (error) {
             console.log(error)
             if (error instanceof BaseError) {
@@ -26,7 +22,6 @@ export class PostController {
             } else {
                 res.status(500).send("Erro inesperado")
             }
-            
         }
     }
 
@@ -40,15 +35,13 @@ export class PostController {
             await this.postBusiness.postsCreate(input)
 
             res.status(201).end()
-            
         } catch (error) {
             console.log(error)
             if (error instanceof BaseError) {
                 res.status(error.statusCode).send(error.message)
             } else {
                 res.status(500).send("Erro inesperado")
-            }
-            
+            }  
         }
     }
 
@@ -59,9 +52,7 @@ export class PostController {
                 content: req.body.content,
                 token: req.headers.authorization
             }
-
             await this.postBusiness.postsEdit(input)
-
             res.status(200).end()
             
         } catch (error) {
@@ -81,10 +72,9 @@ export class PostController {
             idToDelete: req.params.id,
             token: req.headers.authorization
            }
-
            await this.postBusiness.postsDelete(input)
-
            res.status(200).end()
+
         } catch (error) {
             console.log(error)
             if (error instanceof BaseError) {
@@ -92,7 +82,6 @@ export class PostController {
             } else {
                 res.status(500).send("Erro inesperado")
             }
-            
         }
     }
 
@@ -102,15 +91,11 @@ export class PostController {
                 idLikeDislike: req.params.id,
                 token: req.headers.authorization,
                 like:req.body.like
-
             }
 
             await this.postBusiness.postsLikeOrDislike(input)
-
             res.status(200).end()
-           
-
-
+        
         } catch (error) {
             console.log(error)
             if (error instanceof BaseError) {

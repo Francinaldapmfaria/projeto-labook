@@ -12,32 +12,7 @@ export class Post {
         private creatorName: string
         ) {}
 
-   public toDBModel(): PostsDB{
-        return {
-            id: this.id,
-            creator_id: this.creatorId,
-            content :this.content,
-            likes: this.likes,
-            dislikes:this.dislikes,
-            created_at:this.id,
-            updated_at:this.id
-        } 
-    }
-
-    public toBusinessModel():PostsModel {
-        return {
-            id: this.id,
-            content: this.content,
-            likes: this.likes,
-            dislikes: this.dislikes,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt,
-            creator: {
-                id: this.id,
-                name: this.creatorName
-            }
-        }
-    }
+   
 
     public getId(): string {
         return this.id
@@ -64,6 +39,23 @@ export class Post {
     public setLikes(value: number): void {
         this.likes = value
     }
+
+    public addLike(){
+        this.likes +=1
+    }
+
+    public removeLike(){
+        this.likes -= 1
+    }
+
+    public addDislike(){
+        this.dislikes +=1
+    }
+
+    public removeDislike(){
+        this.dislikes -= 1
+    }
+
 
     public getDislikes(): number {
         return this.dislikes
@@ -102,5 +94,32 @@ export class Post {
         
             public setCreatorName(value: string): void {
                 this.creatorName = value
-            }    
+            } 
+            
+            public toDBModel(): PostsDB{
+                return {
+                    id: this.id,
+                    creator_id: this.creatorId,
+                    content :this.content,
+                    likes: this.likes,
+                    dislikes:this.dislikes,
+                    created_at:this.createdAt,
+                    updated_at:this.updatedAt
+                } 
+            }
+        
+            public toBusinessModel():PostsModel {
+                return {
+                    id: this.id,
+                    content: this.content,
+                    likes: this.likes,
+                    dislikes: this.dislikes,
+                    createdAt: this.createdAt,
+                    updatedAt: this.updatedAt,
+                    creator: {
+                        id: this.id,
+                        name: this.creatorName
+                    }
+                }
+            }
 }

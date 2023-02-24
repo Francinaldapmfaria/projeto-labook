@@ -6,10 +6,10 @@ Endpoints
  [x]signup
  [x]login
  [x]get posts
- []create post
- []edit post
- []delete post
- []like / dislike post
+ [x]create post
+ [x]edit post
+ [x]delete post
+ [x]like / dislike post
 
 Autenticação e autorização
 
